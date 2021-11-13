@@ -407,4 +407,44 @@ http_reply_access deny WHEN_ACCESS
 
 ![11 6](https://user-images.githubusercontent.com/55092974/141613133-bb0044e0-a941-4b21-b00c-ad8dfd58d4db.JPG)
 
+## No. 12
+
+Luffy dan Zoro akhirnya memutuskan untuk berlayar untuk mencari harta karun di super.franky.yyy.com. Tugas pencarian dibagi menjadi dua misi, Luffy bertugas untuk mendapatkan gambar (.png, .jpg), sedangkan Zoro mendapatkan sisanya. Karena Luffy orangnya sangat teliti untuk mencari harta karun, ketika ia berhasil mendapatkan gambar, ia mendapatkan gambar dan melihatnya dengan kecepatan 10 kbps
+
+
+#### Water7
+
+- Tambahkan perintah berikut pada `/etc/squid/squid.conf`
+```
+acl LUFFY proxy_auth luffybelikapalb01
+acl ZORO proxy_auth zorobelikapalb01
+
+acl DOWNLOAD url_regex -i \.jpg$ \.png$
+
+delay_pools 2
+delay_class 1 1
+delay_parameters 1 -1/-1
+delay_access 1 allow ZORO
+delay_access 1 deny all
+
+delay_class 2 1
+delay_parameters 2 1250/1250
+delay_access 2 allow LUFFY DOWNLOAD
+delay_access 2 deny all
+```
+
+- Perintah di atas bertujuan untuk membagi atas 2 pools, dimana setiap kelas membagi tugas antara luffy untuk melakukan download, dan zoro sisanya.
+
+- Restart Squid
+`service squid restart`
+
+## No. 13
+
+Sedangkan, Zoro yang sangat bersemangat untuk mencari harta karun, sehingga kecepatan kapal Zoro tidak dibatasi ketika sudah mendapatkan harta yang diinginkannya 
+
+#### Tottoland
+
+- Gunakan tottoland sebagai user zoro dengan menggunakan username dan password zoro.
+
+- 
 
