@@ -201,6 +201,107 @@ hwaddress dapat dilihat dari link/ether pada eth0 saat menggunakan command `ip a
 
 ![image](https://user-images.githubusercontent.com/81372291/141606385-638f1aa6-a65d-4e29-a369-2ddac4e3c90f.png)
 
+## No. 8
+Pada Loguetown, proxy harus bisa diakses dengan nama jualbelikapal.yyy.com dengan port yang digunakan adalah 5000
+
+#### Water7
+
+- Pastikan telah menginstall squid dan apache2 menggunakan :
+` apt-get install squid -y
+apt-get install apache2 -y`
+
+- Lakukan backup file config squid
+`mv /etc/squid/squid.conf /etc/squid/squid.conf.bak`
+
+- Tambahkan teks di bawah ke file `squid.conf` yang kosong
+`http_port 5000
+visible_hostname jualbelikapal.b01.com
+
+http_access allow all`
+
+- Restart squid
+`service squid restart`
+
+
+#### Loguetown
+
+- Install Lynx
+`apt-get install lynx -y`
+
+- Aktifkan proxy dengan port 5000
+`export http_proxy="http://192.177.2.3:5000"`
+
+- Gunakan lynx untuk membuka `its.ac.id`
+![image](https://user-images.githubusercontent.com/90582800/141645710-5b6338ba-7d45-457c-b987-6b3d232b143a.png)
+
+## No. 9
+
+Agar transaksi jual beli lebih aman dan pengguna website ada dua orang, proxy dipasang autentikasi user proxy dengan enkripsi MD5 dengan dua username, yaitu `luffybelikapalb01` dengan password `luffy_b01` dan `zorobelikapalb01` dengan password `zoro_b01`
+
+#### Water7
+
+- Lakukan perintah di bawah untuk membuat username dan password sesuai permintaan soal. Baris kedua tidak memerlukan -c karena file passwd sudah di create. -m digunakan untuk melakukan dekripsi menggunakan MD5
+`htpasswd -c -b -m /etc/squid/passwd zorobelikapalb01 zoro_b01
+htpasswd -b -m /etc/squid/passwd luffybelikapalb01 luffy_b01`
+
+- Tambahkan perintah di bawah ke file `/etc/squid/squid.conf`
+`auth_param basic program /usr/lib/squid/basic_ncsa_auth /etc/squid/passwd
+auth_param basic children 5
+auth_param basic realm Proxy
+auth_param basic credentialsttl 2 hours
+auth_param basic casesensitive on
+acl USERS proxy_auth REQUIRED
+http_access allow USERS`
+
+- Restart Squid
+`service squid restart`
+
+#### Loguetown
+
+- Gunakan lynx untuk membuka `its.ac.id`
+
+![image](https://user-images.githubusercontent.com/90582800/141646252-98aa4293-8a89-4e2b-bd80-c4450de44ea1.png)
+![image](https://user-images.githubusercontent.com/90582800/141646266-ed9b6d08-b7fa-4493-80ee-f74ac5d58288.png)
+
+- Apabila Autentikasi berhasil
+![image](https://user-images.githubusercontent.com/90582800/141645710-5b6338ba-7d45-457c-b987-6b3d232b143a.png)
+
+
+## No. 10
+
+Transaksi jual beli tidak dilakukan setiap hari, oleh karena itu akses internet dibatasi hanya dapat diakses setiap hari Senin-Kamis pukul 07.00-11.00 dan setiap hari Selasa-Jum’at pukul 17.00-03.00 keesokan harinya (sampai Sabtu pukul 03.00)
+
+#### Water7
+
+- Tambahkan perintah berikut pada `/etc/squid/acl.conf`
+`acl AVAILABLE_WORKING_1 time MTWH 07:00-11:00
+acl AVAILABLE_WORKING_2 time TWHF 17:00-23:59
+acl AVAILABLE_WORKING_3 time WHFA 00:00-03:00`
+
+- Variabel MTWHFAS merepresentasikan inisial tiap hari dalam bahasa inggris
+
+- Tambahkan perintah berikut pada `/etc/squid/squid.conf`
+`
+include /etc/squid/acl.conf
+
+http_access allow USERS AVAILABLE_WORKING_1
+http_access allow USERS AVAILABLE_WORKING_2
+http_access allow USERS AVAILABLE_WORKING_3
+http_access deny USERS all`
+
+- Restart Squid
+`service squid restart`
+
+#### Loguetown
+
+- Gunakan lynx untuk membuka `its.ac.id`
+
+- Apabila menggunakan setelan waktu yang sesuai, akan ditampilkan halaman seperti gambar di atas.
+
+- Apabila waktu di set menggunakan perintah `date -s "13 NOV 2021 22:00:00"`, maka akan ditampilkan error sebagai berikut
+![image](https://user-images.githubusercontent.com/90582800/141646296-7a3570f4-a40e-43c2-849e-2a9e6ad6924d.png)
+
+
 
 ## No.11
 Agar transaksi bisa lebih fokus berjalan, maka dilakukan redirect website agar mudah mengingat website transaksi jual beli kapal. Setiap mengakses google.com, akan diredirect menuju `super.franky.yyy.com` dengan website yang sama pada soal shift modul 2. Web server `super.franky.yyy.com` berada pada node `Skypie`.
