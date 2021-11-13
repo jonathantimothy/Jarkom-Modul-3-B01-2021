@@ -438,13 +438,24 @@ delay_access 2 deny all
 - Restart Squid
 `service squid restart`
 
+#### Loguetown
+
+- gunakan lynx untuk melakukan download salah satu file .jpg menggunakan username luffy yang telah dibatasi kecepatan downloadnya.
+
+![z12](https://user-images.githubusercontent.com/90582800/141647765-d809098b-b9c3-408c-bbce-fb9a5c0af016.jpg)
+
 ## No. 13
 
 Sedangkan, Zoro yang sangat bersemangat untuk mencari harta karun, sehingga kecepatan kapal Zoro tidak dibatasi ketika sudah mendapatkan harta yang diinginkannya 
 
-#### Tottoland
+#### Loguetown
 
-- Gunakan tottoland sebagai user zoro dengan menggunakan username dan password zoro.
+- Gunakan Loguetown sebagai user zoro dengan menggunakan username dan password zoro.
 
-- 
+- Karena pada file `/etc/squid/squid.conf` tidak terdapat batasan kecepatan pada zoro, maka ketika melakukan download akan tampil seperti berikut
+![z13](https://user-images.githubusercontent.com/90582800/141647848-dbce08f6-9416-4255-ba26-aa8c397e5b77.jpg)
 
+
+## Kendala
+
+- Pada praktikum ini terdapat kendala sewaktu mengerjakan nomor 11, dimana redirect dari `google.com` mengalami kegagalan beberapa kali karena kesalahan `acl.conf`
