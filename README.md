@@ -207,29 +207,29 @@ Pada Loguetown, proxy harus bisa diakses dengan nama jualbelikapal.yyy.com denga
 #### Water7
 
 - Pastikan telah menginstall squid dan apache2 menggunakan :
-` apt-get install squid -y
-apt-get install apache2 -y`
+``` apt-get install squid -y
+apt-get install apache2 -y```
 
 - Lakukan backup file config squid
-`mv /etc/squid/squid.conf /etc/squid/squid.conf.bak`
+```mv /etc/squid/squid.conf /etc/squid/squid.conf.bak```
 
 - Tambahkan teks di bawah ke file `squid.conf` yang kosong
-`http_port 5000
+```http_port 5000
 visible_hostname jualbelikapal.b01.com
 
-http_access allow all`
+http_access allow all```
 
 - Restart squid
-`service squid restart`
+```service squid restart```
 
 
 #### Loguetown
 
 - Install Lynx
-`apt-get install lynx -y`
+```apt-get install lynx -y```
 
 - Aktifkan proxy dengan port 5000
-`export http_proxy="http://192.177.2.3:5000"`
+```export http_proxy="http://192.177.2.3:5000"```
 
 - Gunakan lynx untuk membuka `its.ac.id`
 ![image](https://user-images.githubusercontent.com/90582800/141645710-5b6338ba-7d45-457c-b987-6b3d232b143a.png)
@@ -241,20 +241,20 @@ Agar transaksi jual beli lebih aman dan pengguna website ada dua orang, proxy di
 #### Water7
 
 - Lakukan perintah di bawah untuk membuat username dan password sesuai permintaan soal. Baris kedua tidak memerlukan -c karena file passwd sudah di create. -m digunakan untuk melakukan dekripsi menggunakan MD5
-`htpasswd -c -b -m /etc/squid/passwd zorobelikapalb01 zoro_b01
-htpasswd -b -m /etc/squid/passwd luffybelikapalb01 luffy_b01`
+```htpasswd -c -b -m /etc/squid/passwd zorobelikapalb01 zoro_b01
+htpasswd -b -m /etc/squid/passwd luffybelikapalb01 luffy_b01```
 
 - Tambahkan perintah di bawah ke file `/etc/squid/squid.conf`
-`auth_param basic program /usr/lib/squid/basic_ncsa_auth /etc/squid/passwd
+```auth_param basic program /usr/lib/squid/basic_ncsa_auth /etc/squid/passwd
 auth_param basic children 5
 auth_param basic realm Proxy
 auth_param basic credentialsttl 2 hours
 auth_param basic casesensitive on
 acl USERS proxy_auth REQUIRED
-http_access allow USERS`
+http_access allow USERS```
 
 - Restart Squid
-`service squid restart`
+```service squid restart```
 
 #### Loguetown
 
@@ -274,23 +274,23 @@ Transaksi jual beli tidak dilakukan setiap hari, oleh karena itu akses internet 
 #### Water7
 
 - Tambahkan perintah berikut pada `/etc/squid/acl.conf`
-`acl AVAILABLE_WORKING_1 time MTWH 07:00-11:00
+```acl AVAILABLE_WORKING_1 time MTWH 07:00-11:00
 acl AVAILABLE_WORKING_2 time TWHF 17:00-23:59
-acl AVAILABLE_WORKING_3 time WHFA 00:00-03:00`
+acl AVAILABLE_WORKING_3 time WHFA 00:00-03:00```
 
 - Variabel MTWHFAS merepresentasikan inisial tiap hari dalam bahasa inggris
 
 - Tambahkan perintah berikut pada `/etc/squid/squid.conf`
-`
+```
 include /etc/squid/acl.conf
 
 http_access allow USERS AVAILABLE_WORKING_1
 http_access allow USERS AVAILABLE_WORKING_2
 http_access allow USERS AVAILABLE_WORKING_3
-http_access deny USERS all`
+http_access deny USERS all```
 
 - Restart Squid
-`service squid restart`
+```service squid restart```
 
 #### Loguetown
 
