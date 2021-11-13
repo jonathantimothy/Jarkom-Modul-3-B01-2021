@@ -201,3 +201,86 @@ hwaddress dapat dilihat dari link/ether pada eth0 saat menggunakan command `ip a
 
 ![image](https://user-images.githubusercontent.com/81372291/141606385-638f1aa6-a65d-4e29-a369-2ddac4e3c90f.png)
 
+
+## No.11
+Agar transaksi bisa lebih fokus berjalan, maka dilakukan redirect website agar mudah mengingat website transaksi jual beli kapal. Setiap mengakses google.com, akan diredirect menuju `super.franky.yyy.com` dengan website yang sama pada soal shift modul 2. Web server `super.franky.yyy.com` berada pada node `Skypie`.
+#### Skypie
+- Pertama - tama, update library dari ubuntu dengan perintah `apt-get update`.
+- Install `apache2 dan librarynya` dengan menjalankan `apt-get install apache2 -y` dan `apt-get install libapache2-mod-php7.0 -y`.
+- Lalu Jalankan apache yang telah dipasang dengan memasukkan perintah `service apache2 start`.
+- Install `php` dengan menjalankan perintah `apt-get install php -y`.
+- Install tools `wget` dengan menjalankan perintah `apt-get install wget -y`.
+- Install tools `unzip` dengan menjalankan perintah `apt-get install unzip -y`.
+- Setelah sudah menginstal semua yang dibutuhkan, download file dari web yang telah disediakan dengan menjalankan perintah seperti berikut:
+	```bash
+	wget https://raw.githubusercontent.com/FeinardSlim/Praktikum-Modul-2-Jarkom/main/super.franky.zip
+	```
+- Lalu Copy konfigurasi 000-default web server yang akan digunakan sebagai template konfigurasi web server super.franky.c07.com dengan perintah :
+	```bash
+	cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/super.franky.b01.com.conf
+	```
+- Kemudian edit file Edit file `/etc/apache2/sites-available/super.franky.b01.com.conf` seperti gambar berikut :
+
+![11 1](https://user-images.githubusercontent.com/55092974/141611958-8072b582-3ad2-4181-9c37-7fbb5a1f6f04.JPG)
+
+- setelah itu buat folder `super.franky.b01.com` di direktori /var/www/ dengan perintah :
+	```bash
+	mkdir /var/www/super.franky.b01.com
+	```
+- Unzip file library web yang sebelumnya telah di download ke folder yang telah dibuat dengan perintah :
+	```bash
+	unzip -j super.franky.zip -d /var/www/super.franky.b01.com
+	```
+
+-   Jalankan konfigurasi website yang telah dibuat dengan menjalankan perintah :
+    ```bash
+    cd /etc/apache2/sites-available/
+    a2ensite super.franky.b01.com.conf
+    ````
+
+-   Edit file `/etc/apache2/ports.conf` seperti pada gambar berikut :
+
+![11 2](https://user-images.githubusercontent.com/55092974/141611997-7400ccd5-c0a8-44c1-a809-311aa06c14f3.JPG)
+
+
+-   Restart service apache dengan perintah :
+	```bash
+	service apache2 restart
+	```
+  #### EniesLobby
+  - Pertama-tama edit file /etc/bind/named.conf.local dan tambahkan perintah seperti berikut :
+  	```bash
+	zone "super.franky.c07.com" {
+ 	type master;
+ 	file "/etc/bind/jarkom/super.franky.c07.com";
+	};
+	```
+
+![11 3](https://user-images.githubusercontent.com/55092974/141612102-9fb6409b-af03-4391-b358-b7b048113485.JPG)
+
+- Lalu edit file `/etc/bind/kaizoku/super.franky.b01.com` seperti gambar berikut :
+
+![11 4](https://user-images.githubusercontent.com/55092974/141612933-4d2e2da3-6a68-4f8a-89d1-71530d7a3b01.JPG)
+
+- Kemudian restart bind9 dengan perintah `service bind9 restart`
+
+#### Water7
+- Pertama edit file Edit file `/etc/squid/squid.conf` dan tambahkan berikut :
+```bash
+dns_nameservers 192.187.2.2 192.168.122.1
+
+acl WHEN_ACCESS dstdomain google.com
+deny_info http://super.franky.b01.com:5000 WHEN_ACCESS
+http_reply_access deny WHEN_ACCESS
+```
+![11 5](https://user-images.githubusercontent.com/55092974/141613048-14d6175e-b914-4052-b720-2443ca892234.JPG)
+
+- Lalu restart squid dengan perintah `service squid restart`
+
+#### Loguetown
+- Export terlebih dahulu dengan perintah `export http_proxy="http://jualbelikapal.b01.com:5000"`
+- lalu buka `lynx google.com`, jika username dan password benar / valid akan muncul gambar seperti berikut :
+
+![11 6](https://user-images.githubusercontent.com/55092974/141613133-bb0044e0-a941-4b21-b00c-ad8dfd58d4db.JPG)
+
+
