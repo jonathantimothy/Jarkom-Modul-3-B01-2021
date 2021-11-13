@@ -147,3 +147,5 @@ Client yang melalui Switch3 mendapatkan range IP dari [prefix IP].3.30 - [prefix
 - Lalu cek IP di client `TattoLand` dengan cara `ip a` seperti pada gambar berikut :
 
 ![4 b](https://user-images.githubusercontent.com/55092974/141386147-51fb8d95-a76c-4c45-a2c3-1cb9dd9a217f.JPG)
+
+
